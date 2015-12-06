@@ -10,7 +10,7 @@ class RepoEncuesta {
 	Collection<String> mails = new ArrayList<String>
 	
 	new() {
-		
+		addRespuesta("mati", new Encuesta)
 	}
 	
 
@@ -31,8 +31,8 @@ class RepoEncuesta {
 		mails
 	}
 	
-	def completoLaEncuesta(String mail){
-		if (getMails.findFirst[m | m == mail] == null) false
-		else true
+	def puedeHacerLaEncuesta(String mail){
+		if (getMails.findFirst[m | m == mail] == null) true
+		else false
 	}
 }

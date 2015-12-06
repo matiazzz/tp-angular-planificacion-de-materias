@@ -22,13 +22,13 @@ class RepoEncuestaTest {
 	}
 	
 	@Test
-	def void completoLaEncuestaTest(){
+	def void noPuedeHacerLaEncuestaTest(){
 		repoEncuestas.addRespuesta(mail, encuesta)
-		Assert.assertTrue(repoEncuestas.completoLaEncuesta(mail))
+		Assert.assertFalse(repoEncuestas.puedeHacerLaEncuesta(mail))
 	}
 	
 	@Test
-	def void noCompletoLaEncuestaTest(){
-		Assert.assertFalse(repoEncuestas.completoLaEncuesta(otroMail))
+	def void puedeHacerLaEncuestaTest(){
+		Assert.assertTrue(repoEncuestas.puedeHacerLaEncuesta(otroMail))
 	}
 }

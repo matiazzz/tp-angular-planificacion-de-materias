@@ -58,8 +58,15 @@ class ResponderController {
 		RepoEncuesta.instance.addRespuesta(respuesta.mail, encuesta)
 		ok();
 	}
+	
+	@Get("/validarMail/:mail")
+	def Result puedeResponderEncuesta() {
+		val m = String.valueOf(mail)
+		response.contentType = ContentType.APPLICATION_JSON
+		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(m).toJson)
+	}
 
 	def static void main(String[] args) {
-		XTRest.start(ResponderController, 9000)
+		XTRest.start(ResponderController, 9001)
 	}
 }
