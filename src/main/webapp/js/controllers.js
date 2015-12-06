@@ -3,8 +3,8 @@ var app = angular.module('encuestaApp', ['ngRoute']);
 
 app.config(function($routeProvider){
 
-	$routeProvider.when('/',{templateUrl:'index.html',controller:'LoginCtrl'})
-	.when('/responder/',{templateUrl:'pages/encuesta.html',controller : 'ResponderCtrl'})
+	$routeProvider.when('/',{templateUrl:'pages/inicio.html',controller:'LoginCtrl'})
+	.when('/responder/:mail',{templateUrl:'pages/encuesta.html',controller : 'ResponderCtrl'})
 	.otherwise({redirectTo:'/'});
 
 });
@@ -28,19 +28,24 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
         }
     });
 
-    $scope.ejecutar = function(){
-    	encuestaService.validarMail($scope.mailIngresado, function(data) { $scope.puedeHacerLaEncuesta = data; });
+    $scope.validarMail = function(){
+        encuestaService.validarMail($scope.mailIngresado, function(data) { $scope.puedeHacerLaEncuesta = data; });
+    }
+
+
+    $scope.autenticar = function(){
+    	$scope.validarMail()
     	if($scope.puedeHacerLaEncuesta){
-    		$scope.cambiarVista
+            $scope.cambiarVista();
     	}
     	else{
-    		$scope.mostrarAlerta
+    		console.log("NO puede hacer la encuesta");
     	}
     	
     }
 
     $scope.cambiarVista = function(){
-    	$location.path('responder/' + $scope.mailIngresado);
+    	$location.path('/responder/' + $scope.mailIngresado);
     }
 
     $scope.mostrarAlerta = function(){
