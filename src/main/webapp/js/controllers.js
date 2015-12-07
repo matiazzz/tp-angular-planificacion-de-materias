@@ -76,7 +76,7 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
 
 
 //VISTA ENCUESTA CONTROLLER
-app.controller('ResponderCtrl',function ($scope, $location, $http, $timeout, EncuestaService){
+app.controller('ResponderCtrl',function ($scope, $location, $routeParams, $http, $timeout, EncuestaService){
 	
 	var encuestaService = new EncuestaService();
 
@@ -164,7 +164,7 @@ app.controller('ResponderCtrl',function ($scope, $location, $http, $timeout, Enc
     $scope.enviarRespuesta = function() {
         encuestaService.addEncuesta(
             {
-                "mail" : "materiasDisponibles",
+                "mail" : $routeParams.mail,
                 "idCarrera": $scope.carreraSeleccionada.id,
                 "materias": $scope.materias,
                 "anioIngreso": $scope.anioIngreso,
