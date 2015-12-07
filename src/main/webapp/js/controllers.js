@@ -14,6 +14,15 @@ app.factory('EncuestaService', function($http) {
         this.validarMail = function(mail, callback) {
             $http.get('/validarMail/' + mail).success(callback);
         }
+        this.getCarreras = function(callback) {
+            $http.get('/carreras').success(callback);
+        }
+        this.getMaterias = function(idCarrera, callback) {
+            $http.get('/materias/' + idCarrera).success(callback);
+        }
+        this.getTurnos = function(callback) {
+            $http.get('/turnos').success(callback);
+        }
     }
 });
 
@@ -86,4 +95,52 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
             $scope.notificarError(status + ": " + data);
         }
     });
+
+    
+
+    $scope.getCarreras = function(){
+        encuestaService.getCarreras(function(data) { $scope.carrerasDisponibles = data; });
+    }
+    $scope.getTurnos = function(){
+        encuestaService.getTurnos(function(data) { $scope.turnosDisponibles = data; });
+    }
+
+    $scope.materias = [];
+
+    $scope.getCarreras();
+    $scope.getTurnos();
+    
+    $scope.deshabilitarAgregarMaterias = true;
+    $scope.seleccionoMateria = false;
+    $scope.seleccionoTurno = false;
+
+    $scope.imprimir = function(){
+        console.log($scope.carreraSeleccionada)
+    }
+
+    $scope.actualizarMaterias = function(){
+        encuestaService.getMaterias($scope.carreraSeleccionada.id, function(data) { $scope.materiasDisponibles = data; });
+        $scope.datosPorDefault();
+    }
+
+    $scope.seleccionarMateria = function(){
+        $scope.seleccionoMateria = true;
+        $scope.deshabilitarAgregarMaterias = !($scope.seleccionoMateria && $scope.seleccionoTurno);
+    }
+
+    $scope.seleccionarTurno =function(){
+        $scope.seleccionoTurno = true;
+        $scope.deshabilitarAgregarMaterias = !($scope.seleccionoMateria && $scope.seleccionoTurno);
+    }
+
+    $scope.datosPorDefault = function(){
+        $scope.deshabilitarAgregarMaterias = true;
+        $scope.seleccionoMateria = false;
+        $scope.seleccionoTurno = false;
+    }
+
+    $scope.agregarMateria = function(materia){
+        $scope.materias.push(materia);
+    }
+    
 });
