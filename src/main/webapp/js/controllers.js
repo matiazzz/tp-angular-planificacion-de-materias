@@ -137,10 +137,72 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
         $scope.deshabilitarAgregarMaterias = true;
         $scope.seleccionoMateria = false;
         $scope.seleccionoTurno = false;
+        $scope.materias = [];
     }
 
-    $scope.agregarMateria = function(materia){
-        $scope.materias.push(materia);
+    $scope.agregarMateria = function(nombreMateria, turnoS){
+
+        if($scope.yaSeAgregoEsaMateria(nombreMateria)){
+            $scope.notificarMensaje("Solo se puede agregar un turno por materia.")
+        }
+        else{
+           $scope.materias.push({nombre: nombreMateria, turno: turnoS});
+            $scope.deshabilitarAgregarMaterias = true; 
+        }
+        
+    }
+
+    $scope.eliminarMateria = function(materia){
+        for(var i in $scope.materias){
+            if($scope.materias[i] == materia){
+                $scope.materias.splice(i,1);
+                break;
+            }
+        }
     }
     
+
+    $scope.yaSeAgregoEsaMateria = function(nombreMateria){
+        for(var i in $scope.materias){
+            if($scope.materias[i].nombre == nombreMateria){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    $scope.deshabilitarEnviarRespuesta = function(){
+        return $scope.carreraSeleccionada == null || 
+                $scope.anioIngreso == null ||
+                $scope.finalesAprobados == null ||
+                $scope.finalesDesaprobados == null ||
+                $scope.cursadasAprobadas == null ||
+                !$scope.agregoMaterias();
+    }
+
+    $scope.agregoMaterias = function(){
+        return $scope.materias.length > 0
+    }
+
+
+
+    // FEEDBACK & ERRORES
+    $scope.msgs = [];
+    $scope.notificarMensaje = function(mensaje) {
+        $scope.msgs.push(mensaje);
+        
+        $timeout(function(){
+            while($scope.msgs.length > 0) $scope.msgs.pop();
+        }, 3000);
+    };
+
+    $scope.errors = [];
+    $scope.notificarError = function(mensaje) {
+        $scope.errors.push(mensaje);
+        $timeout(function(){
+            while($scope.errors.length > 0) $scope.errors.pop();
+        }, 3000);
+    }
+
 });
