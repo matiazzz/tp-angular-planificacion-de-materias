@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('encuestaApp', ['ngRoute']);
+var app = angular.module('encuestaApp', ['ngAnimate', 'ngRoute']);
 
 app.config(function($routeProvider){
 
@@ -39,7 +39,7 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
             $scope.cambiarVista();
     	}
     	else{
-    		console.log("NO puede hacer la encuesta");
+            $scope.mostrarAlerta('Al parecer ya has realizado la encuesta.')
     	}
     	
     }
@@ -48,9 +48,31 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
     	$location.path('/responder/' + $scope.mailIngresado);
     }
 
-    $scope.mostrarAlerta = function(){
-    	console.log("NO puede hacer la encuesta");
+    $scope.mostrarAlerta = function(mensaje){
+    	$scope.notificarMensaje(mensaje);
     }
+
+
+    // FEEDBACK & ERRORES
+    $scope.msgs = [];
+    $scope.notificarMensaje = function(mensaje) {
+        $scope.msgs.push(mensaje);
+        
+        $timeout(function(){
+            while($scope.msgs.length > 0) $scope.msgs.pop();
+        }, 3000);
+    };
+
+    $scope.errors = [];
+    $scope.notificarError = function(mensaje) {
+        $scope.errors.push(mensaje);
+        $timeout(function(){
+            while($scope.errors.length > 0) $scope.errors.pop();
+        }, 3000);
+    }
+
+
+
 });
 
 

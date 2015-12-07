@@ -15,7 +15,14 @@
             <button type="button" class="btn btn-primary btn-block btn-lg col-md-12" ng-click="autenticar()" >Responder</button>
           </div>
 
+          <!-- Mensajes -->
+          <div class="col-md-12">
+            <h4 class="alert alert-danger bg-success animate-repeat" data-ng-repeat="msg in msgs">{{msg}}</h4>
+          </div>
+
         </div>
+
+        
 
       </div>
 
