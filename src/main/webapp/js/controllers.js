@@ -1,14 +1,19 @@
 'use strict';
 var app = angular.module('encuestaApp', ['ngAnimate', 'ngRoute']);
 
+
+//ROUTE CONGFIG
 app.config(function($routeProvider){
 
-	$routeProvider.when('/',{templateUrl:'pages/inicio.html',controller:'LoginCtrl'})
-	.when('/responder/:mail',{templateUrl:'pages/encuesta.html',controller : 'ResponderCtrl'})
+	$routeProvider.when('/',{templateUrl:'pages/inicio.html', controller:'LoginCtrl'})
+	.when('/responder/:mail',{templateUrl:'pages/encuesta.html', controller : 'ResponderCtrl'})
+    .when('/gracias',{templateUrl:'pages/gracias.html', controller : 'GraciasCtrl'})
 	.otherwise({redirectTo:'/'});
 
 });
 
+
+//SERVICE
 app.factory('EncuestaService', function($http) {
     return function() {
         this.validarMail = function(mail, callback) {
@@ -23,24 +28,21 @@ app.factory('EncuestaService', function($http) {
         this.getTurnos = function(callback) {
             $http.get('/turnos').success(callback);
         }
+        this.addEncuesta = function(respuesta, callback) {
+            $http.post('/responder', respuesta).success(callback);
+        }
     }
 });
 
+
+//VISTA LOGIN CONTROLLER
 app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, EncuestaService){
 	
-	var encuestaService = new EncuestaService(function(data, status) { 
-        if (data.error) {
-            $scope.notificarError("Error: " + data.error);
-        }
-        else {
-            $scope.notificarError(status + ": " + data);
-        }
-    });
+	var encuestaService = new EncuestaService();
 
     $scope.validarMail = function(){
         encuestaService.validarMail($scope.mailIngresado, function(data) { $scope.puedeHacerLaEncuesta = data; });
     }
-
 
     $scope.autenticar = function(){
     	$scope.validarMail()
@@ -61,8 +63,7 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
     	$scope.notificarMensaje(mensaje);
     }
 
-
-    // FEEDBACK & ERRORES
+    // FEEDBACK
     $scope.msgs = [];
     $scope.notificarMensaje = function(mensaje) {
         $scope.msgs.push(mensaje);
@@ -71,32 +72,13 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
             while($scope.msgs.length > 0) $scope.msgs.pop();
         }, 3000);
     };
-
-    $scope.errors = [];
-    $scope.notificarError = function(mensaje) {
-        $scope.errors.push(mensaje);
-        $timeout(function(){
-            while($scope.errors.length > 0) $scope.errors.pop();
-        }, 3000);
-    }
-
-
-
 });
 
 
-app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaService){
+//VISTA ENCUESTA CONTROLLER
+app.controller('ResponderCtrl',function ($scope, $location, $http, $timeout, EncuestaService){
 	
-	var encuestaService = new EncuestaService(function(data, status) { 
-        if (data.error) {
-            $scope.notificarError("Error: " + data.error);
-        }
-        else {
-            $scope.notificarError(status + ": " + data);
-        }
-    });
-
-    
+	var encuestaService = new EncuestaService();
 
     $scope.getCarreras = function(){
         encuestaService.getCarreras(function(data) { $scope.carrerasDisponibles = data; });
@@ -113,10 +95,6 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
     $scope.deshabilitarAgregarMaterias = true;
     $scope.seleccionoMateria = false;
     $scope.seleccionoTurno = false;
-
-    $scope.imprimir = function(){
-        console.log($scope.carreraSeleccionada)
-    }
 
     $scope.actualizarMaterias = function(){
         encuestaService.getMaterias($scope.carreraSeleccionada.id, function(data) { $scope.materiasDisponibles = data; });
@@ -161,7 +139,6 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
         }
     }
     
-
     $scope.yaSeAgregoEsaMateria = function(nombreMateria){
         for(var i in $scope.materias){
             if($scope.materias[i].nombre == nombreMateria){
@@ -170,7 +147,6 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
         }
         return false;
     }
-
 
     $scope.deshabilitarEnviarRespuesta = function(){
         return $scope.carreraSeleccionada == null || 
@@ -185,9 +161,23 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
         return $scope.materias.length > 0
     }
 
+    $scope.enviarRespuesta = function() {
+        encuestaService.addEncuesta(
+            {
+                "mail" : "materiasDisponibles",
+                "idCarrera": $scope.carreraSeleccionada.id,
+                "materias": $scope.materias,
+                "anioIngreso": $scope.anioIngreso,
+                "finalesAprobados": $scope.finalesAprobados,
+                "finalesDesaprobados": $scope.finalesDesaprobados,
+                "cursadasAprobadas": $scope.cursadasAprobadas
+            },
+            function(data) {
+                $location.path('/gracias');
+        });
+    };
 
-
-    // FEEDBACK & ERRORES
+    // FEEDBACK
     $scope.msgs = [];
     $scope.notificarMensaje = function(mensaje) {
         $scope.msgs.push(mensaje);
@@ -197,12 +187,11 @@ app.controller('ResponderCtrl',function ($scope, $http, $timeout, EncuestaServic
         }, 3000);
     };
 
-    $scope.errors = [];
-    $scope.notificarError = function(mensaje) {
-        $scope.errors.push(mensaje);
-        $timeout(function(){
-            while($scope.errors.length > 0) $scope.errors.pop();
-        }, 3000);
-    }
+});
 
+
+
+//VISTA GRACIAS CONTROLLER
+app.controller('GraciasCtrl',function ($scope, $location, $timeout){
+    $timeout(function(){$location.path('/');}, 4000);
 });

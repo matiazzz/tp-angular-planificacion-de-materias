@@ -21,7 +21,8 @@ class Carrera {
 	}
 	
 	def tieneEnPlanDeEstudio(Materia materia) {
-		planDeEstudio.contains(materia)
+		if (planDeEstudio.findFirst[m | m.nombre == materia.nombre] == null) false
+		else true
 	}
 	
 }

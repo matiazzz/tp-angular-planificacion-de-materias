@@ -51,11 +51,16 @@ class ResponderController {
 	@Post('/responder')
 	def Result responder(@Body String body) {
 		var Respuesta respuesta = body.fromJson(Respuesta)
-		val Carrera carrera = RepoCarreras.getInstance.findCarrera(respuesta.carreraId)
-		if (!respuesta.materias.forall[materia|carrera.tieneEnPlanDeEstudio(materia)])
+		
+		val Carrera carrera = RepoCarreras.getInstance.findCarrera(respuesta.idCarrera)
+		
+		if(! respuesta.materias.forall[materia | carrera.tieneEnPlanDeEstudio(materia)])
 			throw new ErrorEnLaRespuesta("No puede mezclar materias de distintas carreras")
+			
 		var Encuesta encuesta = respuesta.generarEncuesta();
+		
 		RepoEncuesta.instance.addRespuesta(respuesta.mail, encuesta)
+		
 		ok();
 	}
 	
@@ -64,6 +69,12 @@ class ResponderController {
 		val m = String.valueOf(mail)
 		response.contentType = ContentType.APPLICATION_JSON
 		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(m).toJson)
+	}
+	
+	@Get("/encuestas")
+	def Result getEncuestas() {
+		response.contentType = ContentType.APPLICATION_JSON
+		ok(RepoEncuesta.instance.encuestas.toJson)
 	}
 
 	def static void main(String[] args) {
