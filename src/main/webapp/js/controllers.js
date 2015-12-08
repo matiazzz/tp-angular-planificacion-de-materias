@@ -40,23 +40,24 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
 	
 	var encuestaService = new EncuestaService();
 
-    $scope.validarMail = function(){
-        encuestaService.validarMail($scope.mailIngresado, function(data) { $scope.puedeHacerLaEncuesta = data; });
-    }
-
     $scope.autenticar = function(){
-    	$scope.validarMail()
-    	if($scope.puedeHacerLaEncuesta){
-            $scope.cambiarVista();
-    	}
-    	else{
-            $scope.mostrarAlerta('Al parecer ya has realizado la encuesta.')
-    	}
-    	
+        encuestaService.validarMail($scope.mailIngresado, function(data) {$scope.puedeHacerEncuesta = data; console.log("1", $scope.puedeHacerEncuesta); });
+
+        $scope.irALaEncuesta();
     }
 
-    $scope.cambiarVista = function(){
-    	$location.path('/responder/' + $scope.mailIngresado);
+    $scope.irALaEncuesta = function(){
+        console.log("2", $scope.puedeHacerEncuesta);
+        if($scope.puedeHacerEncuesta){
+            $location.path('/responder/' + $scope.mailIngresado);
+        }
+        else{
+            $scope.mostrarAlerta('Al parecer ya has realizado la encuesta.')
+        } 
+    }
+
+    $scope.deshabilitarResponder = function(){
+        return $scope.mailIngresado == null;
     }
 
     $scope.mostrarAlerta = function(mensaje){

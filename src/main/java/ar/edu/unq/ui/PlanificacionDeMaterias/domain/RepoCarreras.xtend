@@ -13,8 +13,8 @@ class RepoCarreras {
 	int id = 0
 
 	new() {
-		addCarrera("Tecnicatura en Programacion Informatica", newArrayList(new Materia("Objetos I", Turno.NOCHE), new Materia("Objetos II", Turno.TARDE), new Materia("Matematica I", Turno.TARDE)))
-		addCarrera("Licenciatura en Desarrollo de Software", newArrayList(new Materia("Seguridad Informatica", Turno.MANIANA), new Materia("Objetos III", Turno.NOCHE), new Materia("Analisis matematico", Turno.TARDE)))
+		addCarrera("Tecnicatura en Programación Informática", newArrayList(new Materia("Introducción a la programación", Turno.NOCHE), new Materia("Bases de datos", Turno.TARDE), new Materia("Objetos I", Turno.TARDE), new Materia("Objetos II", Turno.TARDE), new Materia("Matematica I", Turno.TARDE)))
+		addCarrera("Licenciatura en Desarrollo de Software", newArrayList(new Materia("Matematica III", Turno.TARDE), new Materia("Seguridad Informatica", Turno.TARDE), new Materia("Objetos III", Turno.TARDE), new Materia("Analisis matematico", Turno.TARDE)))
 	}
 
 	def static RepoCarreras getInstance() {

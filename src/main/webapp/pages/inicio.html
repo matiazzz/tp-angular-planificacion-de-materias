@@ -1,29 +1,25 @@
+<div class="container">
+  <div class="panel panel-primary">
+    <div class="panel-heading"><h4>Estamos tratando de mejorar la oferta de horarios de la universidad.
+      Ayudanos respondiendo la encuesta, solo te tomara 10 minutos.</h4></div>
 
+    <div class="panel-body">
+      
+      <div class="form-group col-xs-12">
+        <input ng-model="mailIngresado" class="form-control input-lg" placeholder="Ingresá tu mail" type="text">
+      </div>
 
-    <div class="container">
+      <div class="form-group col-md-12">
+        <button type="button" class="btn btn-primary btn-block btn-lg col-md-12" ng-click="autenticar()" ng-disabled="deshabilitarResponder()">Responder</button>
+      </div>
 
-      <div class="panel panel-primary">
-        <div class="panel-heading"><h4>Estamos tratando de mejorar la oferta de horarios de la facu.
-          Ayudanos respondiendo la encuesta, solo te tomara 10 minutos.</h4></div>
-        <div class="panel-body">
-          
-          <div class="form-group col-xs-12">
-            <input ng-model="mailIngresado" class="form-control input-lg" placeholder="Ingresá tu mail" type="text">
-          </div>
-
-          <div class="form-group col-md-12">
-            <button type="button" class="btn btn-primary btn-block btn-lg col-md-12" ng-click="autenticar()" >Responder</button>
-          </div>
-
-          <!-- Mensajes -->
-          <div class="col-md-12">
-            <h4 class="alert alert-danger bg-success animate-repeat" data-ng-repeat="msg in msgs">{{msg}}</h4>
-          </div>
-
-        </div>
-
-        
-
+      <!-- Mensajes -->
+      <div class="col-md-12">
+        <h4 class="alert alert-danger bg-success animate-repeat" data-ng-repeat="msg in msgs">{{msg}}</h4>
       </div>
 
     </div>
+
+  </div>
+
+</div>
