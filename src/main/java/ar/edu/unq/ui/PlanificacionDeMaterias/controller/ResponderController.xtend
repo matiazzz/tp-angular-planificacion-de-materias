@@ -71,10 +71,23 @@ class ResponderController {
 		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(m).toJson)
 	}
 	
+	@Post('/validarMail')
+	def Result validarMail(@Body String body) {
+		var Mail mail = body.fromJson(Mail)
+		
+		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(mail.mail).toJson);
+	}
+	
 	@Get("/encuestas")
 	def Result getEncuestas() {
 		response.contentType = ContentType.APPLICATION_JSON
 		ok(RepoEncuesta.instance.encuestas.toJson)
+	}
+	
+	@Get("/mails")
+	def Result getMails() {
+		response.contentType = ContentType.APPLICATION_JSON
+		ok(RepoEncuesta.instance.mails.toJson)
 	}
 
 	def static void main(String[] args) {
