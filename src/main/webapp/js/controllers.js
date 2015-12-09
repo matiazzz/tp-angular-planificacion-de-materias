@@ -41,14 +41,13 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
 	var encuestaService = new EncuestaService();
 
     $scope.autenticar = function(){
-        encuestaService.validarMail($scope.mailIngresado, function(data) {$scope.puedeHacerEncuesta = data; console.log("1", $scope.puedeHacerEncuesta); });
-
-        $scope.irALaEncuesta();
+        encuestaService.validarMail($scope.mailIngresado, function(data) {
+            $scope.irALaEncuesta(data);
+        }); 
     }
 
-    $scope.irALaEncuesta = function(){
-        console.log("2", $scope.puedeHacerEncuesta);
-        if($scope.puedeHacerEncuesta){
+    $scope.irALaEncuesta = function(pudeHacerLaEncuesta){
+        if(pudeHacerLaEncuesta){
             $location.path('/responder/' + $scope.mailIngresado);
         }
         else{
