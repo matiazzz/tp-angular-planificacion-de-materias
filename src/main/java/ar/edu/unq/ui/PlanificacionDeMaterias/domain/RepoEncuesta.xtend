@@ -1,7 +1,7 @@
 package ar.edu.unq.ui.PlanificacionDeMaterias.domain
 
-import java.util.Collection
 import java.util.ArrayList
+import java.util.Collection
 
 class RepoEncuesta {
 	static final RepoEncuesta instance = new RepoEncuesta()
@@ -20,6 +20,8 @@ class RepoEncuesta {
 	}
 
 	def void addRespuesta(String mail, Encuesta encuesta) {
+		encuesta.verificarCorrictitud()
+			
 		allEncuestas.add(encuesta)
 		mails.add(mail)
 	}
@@ -33,7 +35,6 @@ class RepoEncuesta {
 	}
 	
 	def puedeHacerLaEncuesta(String mail){
-		if (getMails.findFirst[m | m == mail] == null) true
-		else false
+		getMails.findFirst[m | m == mail] == null
 	}
 }

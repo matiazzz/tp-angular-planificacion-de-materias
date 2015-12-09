@@ -1,39 +1,5 @@
 'use strict';
-var app = angular.module('encuestaApp', ['ngAnimate', 'ngRoute']);
-
-
-//ROUTE CONGFIG
-app.config(function($routeProvider){
-
-	$routeProvider.when('/',{templateUrl:'pages/inicio.html', controller:'LoginCtrl'})
-	.when('/responder/:mail',{templateUrl:'pages/encuesta.html', controller : 'ResponderCtrl'})
-    .when('/gracias',{templateUrl:'pages/gracias.html', controller : 'GraciasCtrl'})
-	.otherwise({redirectTo:'/'});
-
-});
-
-
-//SERVICE
-app.factory('EncuestaService', function($http) {
-    return function() {
-        this.validarMail = function(mail, callback) {
-            $http.post('/validarMail', mail).success(callback);
-        }
-        this.getCarreras = function(callback) {
-            $http.get('/carreras').success(callback);
-        }
-        this.getMaterias = function(idCarrera, callback) {
-            $http.get('/materias/' + idCarrera).success(callback);
-        }
-        this.getTurnos = function(callback) {
-            $http.get('/turnos').success(callback);
-        }
-        this.addEncuesta = function(respuesta, callback) {
-            $http.post('/responder', respuesta).success(callback);
-        }
-    }
-});
-
+var app = angular.module('encuestaApp');
 
 //VISTA LOGIN CONTROLLER
 app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, EncuestaService){
@@ -184,6 +150,12 @@ app.controller('ResponderCtrl',function ($scope, $location, $routeParams, $http,
             };
     }
 
+    $scope.turnoAdapter = function(turno) {
+        if(turno == "MANIANA") {return "Mañana"}
+            else if (turno == "TARDE") {return "Tarde"}
+                else return "Noche";
+    }
+
     // FEEDBACK
     $scope.msgs = [];
     $scope.notificarMensaje = function(mensaje) {
@@ -196,9 +168,7 @@ app.controller('ResponderCtrl',function ($scope, $location, $routeParams, $http,
 
 });
 
-
-
-//VISTA GRACIAS CONTROLLER
+// GRACIAS CONTROLLER
 app.controller('GraciasCtrl',function ($scope, $location, $timeout){
     $timeout(function(){$location.path('/');}, 4000);
 });

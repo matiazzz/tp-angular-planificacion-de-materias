@@ -23,11 +23,7 @@ class ResponderController {
 	@Get("/carreras")
 	def Result carreras() {
 		response.contentType = ContentType.APPLICATION_JSON
-		var List<CarreraSimple> carrerasSimples = newArrayList()
-
-		for (carrera : RepoCarreras.getInstance.allCarreras) {
-			carrerasSimples.add(new CarreraSimple(carrera))
-		}
+		val List<CarreraSimple> carrerasSimples = RepoCarreras.getInstance.allCarreras.map[new CarreraSimple(it)].toList
 		ok(carrerasSimples.toJson)
 	}
 
@@ -51,30 +47,15 @@ class ResponderController {
 	@Post('/responder')
 	def Result responder(@Body String body) {
 		var Respuesta respuesta = body.fromJson(Respuesta)
-		
-		val Carrera carrera = RepoCarreras.getInstance.findCarrera(respuesta.idCarrera)
-		
-		if(! respuesta.materias.forall[materia | carrera.tieneEnPlanDeEstudio(materia)])
-			throw new ErrorEnLaRespuesta("No puede mezclar materias de distintas carreras")
-			
 		var Encuesta encuesta = respuesta.generarEncuesta();
-		
 		RepoEncuesta.instance.addRespuesta(respuesta.mail, encuesta)
-		
 		ok();
-	}
-	
-	@Get("/validarMail/:mail")
-	def Result puedeResponderEncuesta() {
-		val m = String.valueOf(mail)
-		response.contentType = ContentType.APPLICATION_JSON
-		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(m).toJson)
+		//esto esta incomlpeto porque si se lanza excepcion no se està atajando en ningun lado y va a dar internal server error
 	}
 	
 	@Post('/validarMail')
 	def Result validarMail(@Body String body) {
 		var Mail mail = body.fromJson(Mail)
-		
 		ok(RepoEncuesta.instance.puedeHacerLaEncuesta(mail.mail).toJson);
 	}
 	
