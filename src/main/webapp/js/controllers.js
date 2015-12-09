@@ -17,7 +17,7 @@ app.config(function($routeProvider){
 app.factory('EncuestaService', function($http) {
     return function() {
         this.validarMail = function(mail, callback) {
-            $http.get('/validarMail/' + mail).success(callback);
+            $http.post('/validarMail', mail).success(callback);
         }
         this.getCarreras = function(callback) {
             $http.get('/carreras').success(callback);
@@ -40,9 +40,13 @@ app.controller('LoginCtrl',function ($scope, $location, $http, $timeout, Encuest
 	
 	var encuestaService = new EncuestaService();
 
+    $scope.getMail = function(){
+        return {"mail" : $scope.mailIngresado};
+    }
+
     $scope.autenticar = function(){
-        encuestaService.validarMail($scope.mailIngresado, function(data) {
-            $scope.irALaEncuesta(data);
+        encuestaService.validarMail($scope.getMail(), function(data) {
+            $scope.irALaEncuesta(JSON.parse(data));
         }); 
     }
 
@@ -162,8 +166,14 @@ app.controller('ResponderCtrl',function ($scope, $location, $routeParams, $http,
     }
 
     $scope.enviarRespuesta = function() {
-        encuestaService.addEncuesta(
-            {
+        encuestaService.addEncuesta($scope.getRespuesta(),
+            function(data) {
+                $location.path('/gracias');
+        });
+    };
+
+    $scope.getRespuesta = function(){
+        return {
                 "mail" : $routeParams.mail,
                 "idCarrera": $scope.carreraSeleccionada.id,
                 "materias": $scope.materias,
@@ -171,11 +181,8 @@ app.controller('ResponderCtrl',function ($scope, $location, $routeParams, $http,
                 "finalesAprobados": $scope.finalesAprobados,
                 "finalesDesaprobados": $scope.finalesDesaprobados,
                 "cursadasAprobadas": $scope.cursadasAprobadas
-            },
-            function(data) {
-                $location.path('/gracias');
-        });
-    };
+            };
+    }
 
     // FEEDBACK
     $scope.msgs = [];

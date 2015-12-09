@@ -11,6 +11,7 @@ class RepoEncuesta {
 	
 	new() {
 		addRespuesta("mati", new Encuesta)
+		addRespuesta("mati@mail.com", new Encuesta)
 	}
 	
 
